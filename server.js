@@ -15,15 +15,17 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 
 var db = mongoose.connection;
-var dbUri = process.env.MONGOLAB_URI || 'mongodb://localhost/barsDb';
+var dbUri =  process.env.MONGOLAB_URI ||
+    process.env.MONGOHQ_URL || 'mongodb://localhost/barsDb';
 
-mongoose.connect(dbUri);
-
-db.on('error', console.error.bind(console, 'connection error:'));
-
-db.on("open", function(){
-    console.log("Database connected... \n");
+mongoose.connect(dbUri, function (err, res) {
+    if (err) {
+        console.log('Erorr connection to database ' + dbUri + '.' + err);
+    } else {
+        console.log('Connected to database on ' + dbUri);
+    }
 });
+
 
 
 
