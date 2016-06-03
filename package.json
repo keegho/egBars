@@ -1,0 +1,32 @@
+{
+  "name": "egbars",
+  "version": "1.0.0",
+  "description": "Api to retrive name and details and locations of bars in cairo & alexandria",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keegho/egBars.git"
+  },
+  "keywords": [
+    "egypt",
+    "bars",
+    "cairo",
+    "api"
+  ],
+  "author": "Kegham Karsian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/keegho/egBars/issues"
+  },
+  "homepage": "https://github.com/keegho/egBars#readme",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "mongodb": "^2.1.21",
+    "mongoose": "^4.4.19",
+    "underscore": "^1.8.3"
+  }
+}
