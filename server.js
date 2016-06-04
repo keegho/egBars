@@ -11,13 +11,15 @@ var PORT = process.env.PORT || 3001;
 var app = express();
 
 var MONGOLAB_URI = 'mongodb://heroku_jzdzb5jk:814sb0v4jk9dfbbr4bgercf60g@ds023303.mlab.com:23303/heroku_jzdzb5jk';
+var MONGOHQ_URL = 'mongodb://heroku_jzdzb5jk:814sb0v4jk9dfbbr4bgercf60g@ds023303.mlab.com:23303/heroku_jzdzb5jk';
 
 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 
 
-var dbUri =  process.env.MONGOLAB_URI || 'mongodb://localhost/barsDb';
+var dbUri =  process.env.MONGOLAB_URI ||
+    process.env.MONGOHQ_URL || 'mongodb://localhost/barsDb';
 
 mongoose.connect(dbUri, function (err, res) {
     if (err) {
