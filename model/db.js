@@ -52,6 +52,8 @@ barsSchema.pre('save', function (next) {
     next();
 });
 
+
+
 var bar = mongoose.model('bar', barsSchema);
 
 module.exports = bar;

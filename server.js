@@ -3,11 +3,11 @@
  */
 var express = require('express');
 var _ = require('underscore');
-//var path = require('path');
+var path = require('path');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var dbModel = require('./model/db');
-var PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 3001;
 var app = express();
 
 
@@ -28,6 +28,9 @@ mongoose.connect(dbUri, function (err, res) {
 
 
 
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname + "/public/index.html"));
+});
 
 // post new bar
 app.post('/bars', function (req, res) {
@@ -65,6 +68,14 @@ app.get('/bars/:id', function (req, res) {
 app.put('/bars/:id', function (req, res) {
     var barId = req.params.id;
     var body =  _.pick(req.body,'name', 'address', 'phone', 'barType', 'ambient', 'options', 'loc');
+    dbModel.findById(barId, function (err, bar) {
+        if (bar) {
+
+            bar.save(function (err) {
+                if (err) throw err;
+            });
+        }
+    });
     dbModel.findByIdAndUpdate(barId, {$set:req.body}, function (err, bar) {
         if (err) throw err;
         res.send('Updated');
