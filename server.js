@@ -10,6 +10,9 @@ var dbModel = require('./model/db');
 var PORT = process.env.PORT || 3001;
 var app = express();
 
+var MONGOLAB_URI = 'mongodb://heroku_jzdzb5jk:kegham18@ds023303.mlab.com:23303/heroku_jzdzb5jk';
+var MONGOHQ_URL = '';
+
 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
