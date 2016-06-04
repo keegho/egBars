@@ -15,11 +15,11 @@ var MONGOHQ_URL = 'mongodb://heroku_jzdzb5jk:814sb0v4jk9dfbbr4bgercf60g@ds023303
 
 
 app.use(bodyParser.json());
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 var dbUri =  process.env.MONGOLAB_URI ||
-    process.env.MONGOHQ_URL || 'mongodb://localhost/barsDb';
+    process.env.MONGOHQ_URL || 'mongodb://heroku_jzdzb5jk:814sb0v4jk9dfbbr4bgercf60g@ds023303.mlab.com:23303/heroku_jzdzb5jk';
 
 mongoose.connect(dbUri, function (err, res) {
     if (err) {
