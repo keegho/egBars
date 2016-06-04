@@ -14,7 +14,7 @@ var app = express();
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 
-var db = mongoose.connection;
+
 var dbUri =  process.env.MONGOLAB_URI ||
     process.env.MONGOHQ_URL || 'mongodb://localhost/barsDb';
 
@@ -65,16 +65,7 @@ app.get('/bars/:id', function (req, res) {
 app.put('/bars/:id', function (req, res) {
     var barId = req.params.id;
     var body =  _.pick(req.body,'name', 'address', 'phone', 'barType', 'ambient', 'options', 'loc');
-    dbModel.findByIdAndUpdate(barId, {
-       name: body.name,
-       address: body.address,
-       phone: body.phone,
-       barType: body.barType,
-       ambient: body.ambient,
-       options: body.options
-       //loc: body.loc
-    },
-    function (err, bar) {
+    dbModel.findByIdAndUpdate(barId, {$set:req.body}, function (err, bar) {
         if (err) throw err;
         res.send('Updated');
     });
