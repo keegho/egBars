@@ -4,6 +4,8 @@
 var express = require('express');
 var _ = require('underscore');
 var path = require('path');
+var uuid = require('node-uuid');
+var crypto = require('crypto');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var dbModel = require('./model/db');
@@ -19,16 +21,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 var dbUri =  process.env.MONGOLAB_URI ||
-    process.env.MONGOHQ_URL || 'mongodb://heroku_jzdzb5jk:814sb0v4jk9dfbbr4bgercf60g@ds023303.mlab.com:23303/heroku_jzdzb5jk';
+    process.env.MONGOHQ_URL || 'mongodb://localhost/barsDb';
 
 mongoose.connect(dbUri, function (err, res) {
     if (err) {
         console.log('Erorr connection to database ' + dbUri + '.' + err);
     } else {
-        console.log('Connected to database on ' + dbUri);
+        console.log('Connected to database on ' + dbUri + "\n");
     }
 });
 
+var key = uuid.v4();
+key = crypto.createHash('sha256').update(key).update(crypto.randomBytes(256)).digest('hex');
+console.log(key);
 
 
 app.get('/', function (req, res) {
@@ -51,6 +56,24 @@ app.post('/bars', function (req, res) {
 // get all bars
 app.get('/bars', function (req, res) {
     dbModel.find({},function (err, bars) {
+        if (err) throw err;
+        res.json(bars);
+        res.status(200).send();
+    });
+});
+
+//get bars by location
+app.get('/bars/:loc', function (req, res) {
+    var barLoc = req.params.loc.split(",");
+    var barLocLon = parseFloat(barLoc[0]);//.toFixed(5);
+    var barLocLat = parseFloat(barLoc[1]);//.toFixed(5);
+    barLoc = [];  barLoc.push(barLocLon);  barLoc.push(barLocLat);
+    console.log(barLocLon); console.log(barLocLat);
+    console.log(barLoc);
+
+    dbModel.find({
+        loc:  {$gt:[barLocLon - 0.0200, barLocLat - 0.0200], $lt:[barLocLon + 0.0200, barLocLat + 0.0200]}
+    }, function (err, bars) {
         if (err) throw err;
         res.json(bars);
         res.status(200).send();

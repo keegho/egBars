@@ -24,9 +24,11 @@
   "homepage": "https://github.com/keegho/egBars#readme",
   "dependencies": {
     "body-parser": "^1.15.1",
+    "crypto": "0.0.3",
     "express": "^4.13.4",
     "mongodb": "^2.1.21",
     "mongoose": "^4.4.19",
+    "node-uuid": "^1.4.7",
     "underscore": "^1.8.3"
   }
 }
