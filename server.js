@@ -11,7 +11,7 @@ var mongoose = require('mongoose');
 var dbModel = require('./model/db');
 var PORT = process.env.PORT || 3001;
 var app = express();
-var dbUri =  process.env.MONGOLAB_URI;
+var dbUri =  process.env.MONGODB_URI;
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
