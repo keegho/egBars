@@ -11,15 +11,13 @@ var mongoose = require('mongoose');
 var dbModel = require('./model/db');
 var PORT = process.env.PORT || 3001;
 var app = express();
-var dbUri;
+var dbUri =  process.env.MONGOLAB_URI;
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-if (app.settings.env === 'development'){
+if (app.settings.env === 'development') {
     dbUri = 'mongodb://localhost/barsDb';
-} else {
-    dbUri = 'mongodb://' + process.env.MONGOLAB_URI + 'barsDb';
 }
 
 mongoose.connect(dbUri, function (err, res) {
