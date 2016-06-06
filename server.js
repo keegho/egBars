@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 if (app.settings.env === 'development'){
     dbUri = 'mongodb://localhost/barsDb';
 } else {
-    dbUri = process.env.MONGOLAB_URI;
+    dbUri = 'mongodb://' + process.env.MONGOLAB_URI + 'barsDb';
 }
 
 mongoose.connect(dbUri, function (err, res) {
