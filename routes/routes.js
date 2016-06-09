@@ -74,12 +74,6 @@ module.exports = function (passport) {
             res.status(200).send();
         });
     });
-//Keep it always the last route...
-    router.get('*', function (req, res, next) {
-        var err = new Error();
-        err.status = 404;
-        next(err);
-    });
 
     router.get('/api/bars/:loc', isAuthenticated, function (req, res) {
         var barLoc = req.params.loc.split(",");
@@ -122,6 +116,13 @@ module.exports = function (passport) {
             if (err) throw  err;
             res.send('Deleted id ' + barId);
         });
+    });
+
+    //Keep it always the last route...
+    router.get('*', function (req, res, next) {
+        var err = new Error();
+        err.status = 404;
+        next(err);
     });
 
 	return router;
