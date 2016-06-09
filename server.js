@@ -2,19 +2,46 @@
  * Created by Kegham Karsian on 03-Jun-16.
  */
 var express = require('express');
-var _ = require('underscore');
 var path = require('path');
 var uuid = require('node-uuid');
 var crypto = require('crypto');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var dbModel = require('./model/db');
 var PORT = process.env.PORT || 3001;
-var app = express();
+var passport = require('passport');
+var initPassport = require('./passport/init');
+var routes = require('./routes/routes')(passport);
+//var localPass = require('./config/passport')(passport);
+var flash = require('connect-flash');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var dbUri =  process.env.MONGODB_URI;
 
-app.use(bodyParser.json());
+var app = express();
+
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'private')));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(cookieParser());
+
+app.use(session({
+    secret: 'letsplayintoroadsofthejungles',
+    cookie: {
+        maxAge: 60000
+    },
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+initPassport(passport);
+app.use('/',routes);
+
 
 if (app.settings.env === 'development') {
     dbUri = 'mongodb://localhost/barsDb';
@@ -28,96 +55,27 @@ mongoose.connect(dbUri, function (err, res) {
     }
 });
 
+// catch 404 and frw the error
+app.use(function (err, req, res, next) {
+    if(err.status !== 404) {
+        return next();
+    }
+    res.sendFile(path.join(__dirname + "/public/404.html"));
+    //res.status(404).send("Page not found");
+});
+
+//app.use(require('./routes.bars'));
+//require('./routes/routes.bars')(app);
+//require('./routes/routes.accounts')(app);
+
 var key = uuid.v4();
 key = crypto.createHash('sha256').update(key).update(crypto.randomBytes(256)).digest('hex');
 console.log(key);
-
-
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname + "/public/index.html"));
-});
-
-// post new bar
-app.post('/bars', function (req, res) {
-    var body = _.pick(req.body,'name', 'address', 'phone', 'barType', 'ambient', 'options', 'loc');
-    console.log(body);
-    var newBar = new dbModel(body);
-
-    newBar.save(function (err) {
-        if (err) throw err;
-        //res.send('Bar Created');
-        res.status(201).send();
-    });
-});
-
-// get all bars
-app.get('/bars', function (req, res) {
-    dbModel.find({},function (err, bars) {
-        if (err) throw err;
-        res.json(bars);
-        res.status(200).send();
-    });
-});
-
-//get bars by location
-app.get('/bars/:loc', function (req, res) {
-    var barLoc = req.params.loc.split(",");
-    var barLocLon = parseFloat(barLoc[0]);//.toFixed(5);
-    var barLocLat = parseFloat(barLoc[1]);//.toFixed(5);
-    barLoc = [];  barLoc.push(barLocLon);  barLoc.push(barLocLat);
-    console.log(barLocLon); console.log(barLocLat);
-    console.log(barLoc);
-
-    dbModel.find({
-        loc:  {$gt:[barLocLon - 0.0200, barLocLat - 0.0200], $lt:[barLocLon + 0.0200, barLocLat + 0.0200]}
-    }, function (err, bars) {
-        if (err) throw err;
-        res.json(bars);
-        res.status(200).send();
-    });
-});
-
-// get bar by id:
-app.get('/bars/:id', function (req, res) {
-    var barId = req.params.id;
-    dbModel.findById(barId, function (err, bar) {
-        if (err) throw err;
-        res.json(bar);
-        res.status(200).send();
-    });
-});
-
-// update bar by id:
-app.put('/bars/:id', function (req, res) {
-    var barId = req.params.id;
-    var body =  _.pick(req.body,'name', 'address', 'phone', 'barType', 'ambient', 'options', 'loc');
-    dbModel.findById(barId, function (err, bar) {
-        if (bar) {
-
-            bar.save(function (err) {
-                if (err) throw err;
-            });
-        }
-    });
-    dbModel.findByIdAndUpdate(barId, {$set:req.body}, function (err, bar) {
-        if (err) throw err;
-        res.send('Updated');
-    });
-});
-
-// delete bar by id:
-app.delete('/bars/:id', function (req, res) {
-    var barId = req.params.id;
-    //console.log(barId);
-    dbModel.findByIdAndRemove(barId, function (err) {
-        if (err) throw  err;
-        res.send('Deleted id ' + barId);
-    });
-});
 
 
 // connect to server
 app.listen(PORT, function () {
     console.log('Listening to port ' + PORT + '...');
 });
+
 

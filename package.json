@@ -23,12 +23,19 @@
   },
   "homepage": "https://github.com/keegho/egBars#readme",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.1",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
     "crypto": "0.0.3",
     "express": "^4.13.4",
-    "mongodb": "^2.1.21",
+    "express-session": "^1.13.0",
     "mongoose": "^4.4.19",
     "node-uuid": "^1.4.7",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
+    "passport-google-oauth": "^1.0.0",
+    "passport-local": "^1.0.0",
     "underscore": "^1.8.3"
   }
 }
