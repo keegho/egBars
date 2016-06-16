@@ -192,6 +192,17 @@ form.login a:hover
     color: rgba(255,241,171,.5);
 }
 
+footer {
+    text-align: center;
+    position:fixed;
+    left:0px;
+    bottom:0px;
+    height:30px;
+    width:100%;
+    background:#999;
+
+}
+
 .social {
     margin-top: 30px;
 

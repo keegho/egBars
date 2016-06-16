@@ -1,6 +1,7 @@
 /**
  * Created by Kegham Karsian on 03-Jun-16.
  */
+require('dotenv').config();
 var express = require('express');
 var path = require('path');
 var uuid = require('node-uuid');
@@ -11,7 +12,6 @@ var PORT = process.env.PORT || 3001;
 var passport = require('passport');
 var initPassport = require('./passport/init');
 var routes = require('./routes/routes')(passport);
-//var localPass = require('./config/passport')(passport);
 var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
@@ -29,9 +29,9 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 app.use(session({
-    secret: 'letsplayintoroadsofthejungles',
+    secret: process.env.SESSION_SECRET,
     cookie: {
-        maxAge: 60000
+        maxAge: 600000
     },
     resave: true,
     saveUninitialized: true
@@ -44,7 +44,7 @@ app.use('/',routes);
 
 
 if (app.settings.env === 'development') {
-    dbUri = 'mongodb://localhost/barsDb';
+    dbUri = process.env.DB_HOST;
 }
 
 mongoose.connect(dbUri, function (err, res) {
@@ -64,9 +64,6 @@ app.use(function (err, req, res, next) {
     //res.status(404).send("Page not found");
 });
 
-//app.use(require('./routes.bars'));
-//require('./routes/routes.bars')(app);
-//require('./routes/routes.accounts')(app);
 
 var key = uuid.v4();
 key = crypto.createHash('sha256').update(key).update(crypto.randomBytes(256)).digest('hex');

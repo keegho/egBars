@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="hopperApp" ng-controller="hopperController">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
@@ -26,47 +26,94 @@
 
 </head>
 <body>
-<div class="cover-container">
-    <div class="masthead clearfix">
-        <div class="inner">
-            <h3 class="masthead-brand">Bar Hoppers</h3>
-            <nav>
-                <ul class="nav masthead-nav">
-                    <li><a href="/index.html">Home</a></li>
-                    <li class="active"><a href="/signup">Sign Up</a></li>
-                    <li><a href="/bars">Bars</a></li>
-                    <li><a href="/pricing">Pricing</a></li>
-                    <li><a href="/contacts">Contact Us</a></li>
-                </ul>
-            </nav>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Bar Hopper</a>
         </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li>
+                    <a href="api/bars">Bars</a>
+                </li>
+                <li>
+                    <a href="#">Api</a>
+                </li>
+                <li>
+                    <a href="pricing.html">Pricing</a>
+                </li>
+                <li>
+                    <a href="#">Contact Us</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="signup.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
     </div>
+    <!-- /.container -->
+</nav>
+
     <div class="row">
         <div class="col-md-12">
             <div class="wrap">
                 <p class="form-title">
                     Sign Up</p>
-                <form class="login">
-                    <input type="email" placeholder="Email" />
-                    <input type="password" placeholder="Password" />
-                    <input type="password" placeholder="Confirm Password" />
-                    <input type="submit" value="Sign In" class="btn btn-default btn-sm" />
+                <form class="login" ng-submit="signup()" name="signupForm" novalidate>
+                    <input ng-model="user.email" type="email" name="userEmail" placeholder="Email" required >
+                    <input ng-model="user.password" type="password" name="userPassword" placeholder="Password" required >
+                    <input ng-model="user.password2" ng-minlength="7" type="password" name="userPassword2" placeholder="Confirm Password" required>
+                    <input type="submit" value="Sign In" class="btn btn-default btn-sm" >
                 </form>
                 <div class="social">
                     <a href="#" class="btn azm-social azm-btn azm-facebook"><i class="fa fa-facebook"></i> Log in with Facebook</a>
                     <a href="#" class="btn azm-social azm-btn azm-google-plus" ><i class="fa fa-google-plus"></i> Log in with Google</a>
                 </div>
-                <div class="mastfoot">
-                    <div class="inner">
-                        <p>Developed by <a href="http://appologi.co">Appologi.co</a></p>
-                    </div>
+                <div ng-messages="signupForm.email.$error" ng-if="signupForm.email.$touched">
+                    <p ng-message="required">Email is required</p>
+                </div>
+                <div ng-messages="signupForm.password.$error" ng-if="signupForm.password.$touched">
+                    <p ng-message="minLength">Password has to be not less than 7 characters</p>
+                    <p ng-message="required">Password is required</p>
+                </div>
+                <div ng-messages="signupForm.password2.$error" ng-if="signupForm.password2.$touched">
+                    <p ng-message="minLength">Password has to be not less than 7 characters</p>
+                    <p ng-message="required">Password confirmation is required</p>
                 </div>
             </div>
 
         </div>
     </div>
+<hr>
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy; <a href="htttp://www.appologi.co">Appologi.co</a> 2016</p>
+            </div>
+        </div>
+        <!-- /.row -->
+    </footer>
 
 </div>
-
+    <!-- Angular JS -->
+    <!-- Angular Controller -->
+    <script src="assets/angular/angular.min.js"></script>
+    <script src="assets/angular/angular-messages.min.js"></script>
+    <script src="ng/app.js"></script>
 </body>
 </html>

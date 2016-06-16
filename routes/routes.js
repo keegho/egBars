@@ -8,7 +8,7 @@ var isAuthenticated = function (req, res, next){
 	if(req.isAuthenticated()) {
 		return next();
 	}
-    console.log("Not authenticated");
+    console.log("Not authenticated, Signup first");
 	res.redirect('/signup');
 };
 
@@ -19,7 +19,7 @@ module.exports = function (passport) {
 	});
 
 	router.post('/login', passport.authenticate('login', {
-		successRedirect: '/private/api/bars',
+		successRedirect: '/api/bars',
 		failureRedirect: '/',
 		failureFlash: true
 	}));
@@ -30,12 +30,12 @@ module.exports = function (passport) {
 	});
 
 	router.post('/signup', passport.authenticate('signup', {
-		successRedirect: '/private/api/bars',
+		successRedirect: '/api/bars',
 		failureRedirect: '/signup',
 		failureFlash: true
 	}));
 
-	router.get('/private/home',isAuthenticated, function (req, res) {
+	router.get('/private/profile',isAuthenticated, function (req, res) {
 		res.sendFile(path.join(__dirname + "/../private/home.html"));
         //res.render(__dirname + "/../private/home.html");
 	});
@@ -46,7 +46,7 @@ module.exports = function (passport) {
 		res.sendFile(path.join(__dirname + "/../public/index.html"));
 	});
 
-	router.get('/private/api/bars', isAuthenticated ,function (req, res) {
+	router.get('/api/bars', isAuthenticated ,function (req, res) {
 		bars.find({},function (err, bars) {
 			if (err) throw err;
 			res.json(bars);
@@ -54,7 +54,7 @@ module.exports = function (passport) {
 		});
 	});
 
-	router.post('/private/api/bars', isAuthenticated, function (req, res) {
+	router.post('/api/bars', isAuthenticated, function (req, res) {
         var body = _.pick(req.body,'name', 'address', 'phone', 'barType', 'ambient', 'options', 'loc');
         console.log(body);
         var newBar = new bars(body);
@@ -66,7 +66,7 @@ module.exports = function (passport) {
         });
 	});
 
-    router.get('/private/api/bars/:id', isAuthenticated, function (req, res) {
+    router.get('/api/bars/:id', isAuthenticated, function (req, res) {
         var barId = req.params.id;
         bars.findById(barId, function (err, bar) {
             if (err) throw err;

@@ -167,12 +167,4 @@ body {
     margin-top: 20px;
 }
 
-.carousel-inner > .item > img, .carousel-inner > .item > a > img {
-    display: block;
-    height: 500px;
-    min-width: 100%;
-    width: 100%;
-    max-width: 100%;
-    line-height: 1;
-}
 
